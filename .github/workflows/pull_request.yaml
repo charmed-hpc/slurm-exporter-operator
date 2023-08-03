@@ -24,27 +24,16 @@ jobs:
         needs: lint-charm
         runs-on: "ubuntu-latest"
         steps:
-            - uses: actions/checkout@v3
+            - name: Checkout
+              uses: actions/checkout@v3
+            - name: Setup operator environment
+              uses: charmed-kubernetes/actions-operator@main
               with:
-                  fetch-depth: 0
-            - name: "Install charmcraft"
-              run: |
-                  sudo snap install charmcraft --channel=latest/stable --classic
-            - name: "Install lxd"
-              run: |
-                  sudo snap install lxd --channel=latest/stable
-                  sudo snap refresh lxd
-            - name: "Configure lxd"
-              run: |
-                  sudo adduser $USER lxd
-                  newgrp lxd        
-                  sudo lxd init --auto
-                  sudo lxc network set lxdbr0 ipv6.address none        
-                  sudo chmod a+wr /var/snap/lxd/common/lxd/unix.socket
+                provider: lxd
+                juju-channel: 3.1/stable
             - name: "Build the charms"
               shell: bash
               run: |
                   make version
                   charmcraft pack
-
                   echo "charm version: $(cat version)"
