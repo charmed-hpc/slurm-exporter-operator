@@ -45,6 +45,6 @@ jobs:
               shell: bash
               run: |
                   make version
-                  sg lxd -c "charmcraft pack"
+                  charmcraft pack
 
                   echo "charm version: $(cat version)"

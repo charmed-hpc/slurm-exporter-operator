@@ -30,7 +30,7 @@ jobs:
         shell: bash
         run: |
           make version
-          sg lxd -c "charmcraft pack"
+          charmcraft pack
 
       - name: "Upload to edge"
         env:
