@@ -35,7 +35,7 @@ $ make charm
 Once you have built the charm, use Juju to deploy it:
 
 ```bash
-$ juju deploy ./slurm-exporter_ubuntu-20.04-amd64_centos-7-amd64.charm --resource slurm-exporter=./slurm-exporter.tar.gz
+$ juju deploy ./slurm-exporter_ubuntu-20.04-amd64_ubuntu-22.04-amd64_centos-7-amd64_centos-8-amd64.charm --resource slurm-exporter=./slurm-exporter.tar.gz
 ```
 
 ## Contact

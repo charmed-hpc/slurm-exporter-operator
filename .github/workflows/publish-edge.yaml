@@ -7,36 +7,24 @@ on:
 jobs:
   build-charms:
     name: "Build the charms"
-    runs-on: "ubuntu-20.04"
+    runs-on: "ubuntu-latest"
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup operator environment
+        uses: charmed-kubernetes/actions-operator@main
         with:
-          fetch-depth: 0
-      - name: "Install charmcraft"
-        run: |
-          sudo snap install charmcraft --channel=latest/stable --classic
-      - name: "Install lxd"
-        run: |
-          sudo snap install lxd --channel=latest/stable
-          sudo snap refresh lxd
-      - name: "Configure lxd"
-        run: |
-          sudo groupadd --force --system lxd
-          sudo usermod --append --groups lxd $USER
-          newgrp lxd
-          sudo snap start lxd
-          sudo lxd waitready --timeout=30
-          sudo lxd init --auto
+          provider: lxd
+          juju-channel: 3.1/stable
       - name: "Build the charms"
         shell: bash
         run: |
           make version
-          sg lxd -c "charmcraft pack"
-
+          charmcraft pack
       - name: "Upload to edge"
         env:
           CHARMCRAFT_AUTH: ${{ secrets.CHARMCRAFT_AUTH }}
         run: |
-          extension="_ubuntu-20.04-amd64_centos-7-amd64.charm"
+          extension="_ubuntu-20.04-amd64_ubuntu-22.04-amd64_centos-7-amd64_centos-8-amd64.charm"
 
           charmcraft upload --release=edge slurm-exporter$extension --resource slurm-exporter:1
